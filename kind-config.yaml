@@ -4,6 +4,11 @@ name: mern-notes
 nodes:
   - role: control-plane
     extraPortMappings:
+
+      - containerPort: 30081
+        hostPort: 30081
+        protocol: TCP
+
       - containerPort: 30082   # matches nodePort in 04-frontend.yaml
         hostPort: 30082
         protocol: TCP
