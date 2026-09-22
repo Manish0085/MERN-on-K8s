@@ -15,12 +15,12 @@ const app=express();
 const PORT=process.env.PORT || 5001;
 const __dirname=path.resolve();
 
-if(process.env.NODE_ENV!=="production"){
-    app.use(
-        cors({
-        origin:"http://localhost:5173",
-    }))
-}
+app.use(cors({
+    origin: [
+        "http://localhost:5173",
+        "http://13.127.78.224:30082"
+    ]
+}));
 
 //middleware, add before routes
 app.use(express.json());
