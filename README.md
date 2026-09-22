@@ -6,6 +6,8 @@ running on an AWS EC2 instance. Built as Day 3 of a 15-day DevOps challenge.
 
 ## Architecture
 
+![MERN Notes App Kubernetes Architecture](Architecture.png)
+
 ```mermaid
 graph LR
     User -->|"http://EC2-IP:30082"| FE[Frontend Pod x2<br/>React + Vite<br/>port 5173]
