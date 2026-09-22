@@ -1,0 +1,62 @@
+# Place this file at the repo root (same level as BE/ and FE/)
+#
+# Usage:
+#   cp .env.example .env      # fill in real values
+#   docker compose up --build
+#
+# Backend  -> http://localhost:5001
+# Frontend -> http://localhost:5173
+# MongoDB  -> localhost:27017 (only needed if you want to inspect it directly)
+
+services:
+  mongodb:
+    image: mongo:7
+    container_name: mern-notes-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./BE
+    container_name: mern-notes-backend
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      # Overrides whatever MONGO_URI is in .env, so compose always talks to
+      # the local mongodb service above instead of a remote Atlas cluster.
+      MONGO_URI: mongodb://admin:admin123@mongodb:27017/notes_app?authSource=admin
+      PORT: 5001
+      NODE_ENV: development
+      UPSTASH_REDIS_REST_URL: "https://star-buffalo-289272.upstash.io"
+      UPSTASH_REDIS_REST_TOKEN: "gQAAAAAABGn4AAIgcDI0N2NjOWUyZmI5MDE0ZGRhOTVmYTU4OTBjNGUyNTBiZQ"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./FE
+    
+      args:
+        VITE_API_URL: http://localhost:5001/api
+    container_name: mern-notes-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:

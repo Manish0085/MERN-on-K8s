@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: mern-notes
+data:
+  PORT: "5001"
+  NODE_ENV: "production"
