@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: manishk57107/mern_notesapp-frontend:v1.0
+          image: manishk57107/mern_notesapp-frontend:v1.2
           ports:
             - containerPort: 5173
           resources:
